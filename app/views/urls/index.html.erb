@@ -1,23 +1,17 @@
-<h1>Listing urls</h1>
+<h1>Existing URLs</h1>
 
 <table>
   <tr>
     <th>Long</th>
     <th>Short</th>
-    <th></th>
-    <th></th>
-    <th></th>
   </tr>
 
-<% @urls.each do |url| %>
-  <tr>
-    <td><%= url.long %></td>
-    <td><%= url.short %></td>
-    <td><%= link_to 'Show', url %></td>
-    <td><%= link_to 'Edit', edit_url_path(url) %></td>
-    <td><%= link_to 'Destroy', url, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
+  <% @urls.each do |url| %>
+    <tr>
+      <td><%= url.long %></td>
+      <td><%= link_to(go_url(:short_url => url.short), go_url(:short_url => url.short), :target => '_blank') %></td>
+    </tr>
+  <% end %>
 </table>
 
 <br />

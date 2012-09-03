@@ -3,6 +3,7 @@ MiniUrl::Application.routes.draw do
 
   match 'shorten' => 'urls#shorten', :as => 'shorten', :via => [:post]
   match '/go/:short_url' => 'urls#go', :as => 'go', :via => [:get]
+  match 'no_url' => 'urls#no_url', :as => 'no_url', :via => [:get]
 
   root :to => 'urls#new'
 

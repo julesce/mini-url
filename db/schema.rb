@@ -20,4 +20,7 @@ ActiveRecord::Schema.define(:version => 20120831154637) do
     t.datetime "updated_at", :null => false
   end
 
+  add_index "urls", ["long"], :name => "index_urls_on_long"
+  add_index "urls", ["short"], :name => "index_urls_on_short"
+
 end
