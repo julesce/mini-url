@@ -25,15 +25,35 @@ class Url < ActiveRecord::Base
       Url.find_by_short_poor_spelling(short_value)
     end
 
-  end # End Class Methods
+    # TODO: Make these methods (characters_not_in_common and characters_not_offensive and find_by_short_poor_spelling) private,
+    # and then figure out how to test them effectively
 
-  # P R I V A T E
-  private
+    # Determine if there are any other short urls that are within 1 character of the one provided
+    def characters_not_in_common(short_value)
+      possible_variations = []
+      short_value.each_char do |char|
+        possible_variations << short_value.gsub(char, '_')
+      end
 
-  class << self
+      Url.where{ short.like_any possible_variations }.blank?
+    end
+
+    # Make sure we haven't generated a word that is on the offensive list
+    def characters_not_offensive(short_value, bad_words=[])
+      not_offensive = true
+      bad_words = OFFENSIVE_WORDS if bad_words.blank?
+      bad_words.each do |word|
+        if short_value.include?(word)
+          not_offensive = false
+          break
+        end
+      end
+
+      not_offensive
+    end
 
     # Find by the short value, considering mistypings (0 and O for example)
-    def find_by_short_poor_spelling(short_value)
+    def find_by_short_poor_spelling(short_value, bad_spelling = {})
 
       # Let's aim for a perfect match the first time around
       url = Url.where(:short => short_value).first
@@ -41,7 +61,8 @@ class Url < ActiveRecord::Base
       # If we don't have a result lets take a look at some spelling mistakes...
       if url.blank?
         possibilities = []
-        POOR_SPELLING.each do |key, value|
+        bad_spelling = POOR_SPELLING if bad_spelling.blank?
+        bad_spelling.each do |key, value|
           possibilities << short_value.gsub(key.downcase, value.downcase) # Downcase these values because we can't count on our source to do it
           possibilities << short_value.gsub(value.downcase, key.downcase)
         end
@@ -51,6 +72,15 @@ class Url < ActiveRecord::Base
 
       url
     end
+
+  end # End Class Methods
+
+  # P R I V A T E
+  private
+
+  class << self
+
+
 
     # Generate the short URL, taking into account 'offensive' words and characters in common
     def generate_short_url
@@ -82,28 +112,6 @@ class Url < ActiveRecord::Base
       (characters_not_in_common(short_value) and characters_not_offensive(short_value))
     end
 
-    # Determine if there are any other short urls that are within 1 character of the one provided
-    def characters_not_in_common(short_value)
-      possible_variations = []
-      short_value.each_char do |char|
-        possible_variations << short_value.gsub(char, '_')
-      end
-
-      Url.where{ short.like_any possible_variations }.blank?
-    end
-
-    # Make sure we haven't generated a word that is on the offensive list
-    def characters_not_offensive(short_value)
-      not_offensive = true
-      OFFENSIVE_WORDS.each do |word|
-        if short_value.include?(word)
-          not_offensive = false
-          break
-        end
-      end
-
-      not_offensive
-    end
   end
 
   # H O O K S

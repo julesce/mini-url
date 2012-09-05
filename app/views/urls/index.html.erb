@@ -1,19 +1,23 @@
-<h1>Existing URLs</h1>
+<div class="hero-unit">
+  <h1>Existing URLS</h1>
+</div>
 
-<table>
-  <tr>
-    <th>Long</th>
-    <th>Short</th>
-  </tr>
+<div class="row">
+  <div class="span12">
 
-  <% @urls.each do |url| %>
-    <tr>
-      <td><%= url.long %></td>
-      <td><%= link_to(go_url(:short_url => url.short), go_url(:short_url => url.short), :target => '_blank') %></td>
-    </tr>
-  <% end %>
-</table>
+    <table class="table table-striped">
+      <tr>
+        <th>Long URL</th>
+        <th>Short URL</th>
+      </tr>
 
-<br />
+      <% @urls.each do |url| %>
+        <tr>
+          <td><%= url.long %></td>
+          <td><%= link_to(go_url(:short_url => url.short), go_url(:short_url => url.short), :target => '_blank') %></td>
+        </tr>
+      <% end %>
+    </table>
 
-<%= link_to 'New Url', new_url_path %>
+  </div>
+</div>

@@ -1,11 +1,17 @@
-<%= form_tag(shorten_path) do %>
+<%= form_tag(shorten_path, :class => 'form-horizontal') do %>
 
-  <div class="field">
-    <%= label_tag :long_url %><br />
-    <%= text_field_tag :long_url %>
+  <legend>New Short URL</legend>
+
+  <div class="control-group">
+    <%= label_tag :long_url, 'URL to shorten', :class => 'control-label' %>
+    <div class="controls">
+      <%= text_field_tag :long_url %>
+    </div>
   </div>
 
-  <div class="actions">
-    <%= submit_tag 'Submit' %>
+  <div class="control-group">
+    <div class="controls">
+      <%= submit_tag 'Submit', :class => 'btn btn-primary' %>
+    </div>
   </div>
 <% end %>
