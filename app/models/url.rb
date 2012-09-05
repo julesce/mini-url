@@ -16,13 +16,13 @@ class Url < ActiveRecord::Base
 
     # Find an existing shortened URL, or shorten it now for the first time
     def find_or_shorten(long_value)
-      url = Url.where(:long => long_value).first
-      url.present? ? url : Url.create(:long => long_value, :short => Url.generate_short_url)
+      url = self.where(:long => long_value).first
+      url.present? ? url : self.create(:long => long_value, :short => self.generate_short_url)
     end
 
     # Find a matching URL by the short value, taking into account mistypings such as 0 and O
     def find_by_short_value(short_value)
-      Url.find_by_short_poor_spelling(short_value)
+      self.find_by_short_poor_spelling(short_value)
     end
 
     # TODO: Make these methods (characters_not_in_common and characters_not_offensive and find_by_short_poor_spelling) private,
@@ -35,7 +35,7 @@ class Url < ActiveRecord::Base
         possible_variations << short_value.gsub(char, '_')
       end
 
-      Url.where{ short.like_any possible_variations }.blank?
+      self.where{ short.like_any possible_variations }.blank?
     end
 
     # Make sure we haven't generated a word that is on the offensive list
@@ -56,7 +56,7 @@ class Url < ActiveRecord::Base
     def find_by_short_poor_spelling(short_value, bad_spelling = {})
 
       # Let's aim for a perfect match the first time around
-      url = Url.where(:short => short_value).first
+      url = self.where(:short => short_value).first
 
       # If we don't have a result lets take a look at some spelling mistakes...
       if url.blank?
@@ -67,20 +67,18 @@ class Url < ActiveRecord::Base
           possibilities << short_value.gsub(value.downcase, key.downcase)
         end
 
-        url = Url.where{ short.like_any possibilities }.first
+        url = self.where{ short.like_any possibilities }.first
       end
 
       url
     end
 
-  end # End Class Methods
+  end # End Public Class Methods
 
   # P R I V A T E
   private
 
   class << self
-
-
 
     # Generate the short URL, taking into account 'offensive' words and characters in common
     def generate_short_url
@@ -93,7 +91,7 @@ class Url < ActiveRecord::Base
         random_string = "#{97.+(SecureRandom.random_number(25)).chr}#{SecureRandom.hex(2)}"
 
         #Make sure that it doesn't exist already and has safe characters
-        if Url.where(:short => random_string).blank? and characters_are_safe(random_string)
+        if self.where(:short => random_string).blank? and characters_are_safe(random_string)
           short = random_string
           break
         end
@@ -111,7 +109,6 @@ class Url < ActiveRecord::Base
     def characters_are_safe(short_value)
       (characters_not_in_common(short_value) and characters_not_offensive(short_value))
     end
-
   end
 
   # H O O K S

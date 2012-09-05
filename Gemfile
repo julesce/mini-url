@@ -8,6 +8,7 @@ group :development, :test do
   gem 'factory_girl_rails', '~> 4.0.0'
   gem 'quiet_assets', '~> 1.0.0'
   gem 'sqlite3', '~> 1.3.6'
+  gem 'rack-mini-profiler', '~> 0.1.16'
 end
 
 group :test do
