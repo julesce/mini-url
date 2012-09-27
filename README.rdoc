@@ -3,28 +3,26 @@
 The rails app provides a form to test the web service at the root path. The web
 service accepts an HTML form POST to the following route:
 
-/shorten
+        /shorten
 
 The form needs to contain a 'long_url' value, representing the URL to be shortened.
 The web service will return a JSON object containing the details of the shortened URL:
 
-{"long":"http://www.rubyflow.com","short":"odfaf" ... }
+        {"long":"http://www.rubyflow.com","short":"odfaf" ... }
 
 One can then hit the shortend URL like so:
 
-/go/odfaf
-
+        /go/odfaf
 
 == Setup and run
 
-> bundle install --without production
+        bundle install --without production
 
-> rake db:create
+        rake db:create
 
-> rake db:migrate
+        rake db:migrate
 
-> rails s
-
+        rails s
 
 == Running the Rspec test suite
 
@@ -32,10 +30,10 @@ I've included Rspec tests for the model and controller. The web UI exists to ser
 tool with which to test the web service as well, so I haven't worried about speccing
 those views out.
 
-> rake db:create:all
+        rake db:create:all
 
-> rake db:migrate
+        rake db:migrate
 
-> rake db:test:prepare
+        rake db:test:prepare
 
-> rspec .
+        rspec .
